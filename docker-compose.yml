@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+      - "4022:4022"
+    environment:
+      - UseRedis=true
+      - Redis:ConnectionString=redis:6379
+      - Redis:TimeToLive=10
+      - CorsSettings:AllowedOrigins__0=http://localhost:3000
+      - BaseUrl=http://localhost:8080
+      - ASPNETCORE_ENVIRONMENT=docker-compose
+      - ASPNETCORE_URLS=http://+
+  client:
+    env_file:
+      - ./src/UrlShortener.WebApplication/ClientApp/.env.docker-compose
+    build:
+      context: .
+      dockerfile: Dockerfile-client
+    ports:
+       - "3000:80"
+  redis:
+    image: "redis:6.2"
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf

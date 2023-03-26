@@ -3,12 +3,55 @@
 Provide some details about your application 
 
 ## How to start?
-`Section description:  What should be done before application start(e.g db migration)`
-## Key assumptions 
-`Section description: If you have any assumption during your implementation, please provide them here.`
+### Docker Compose 
+#### Prerequisites
+ - Docker installed(v20.10.0 or higher)
+ - Docker compose is present
+ - .NET SDK (v6.0 or higher)
+#### Setup and run using Docker Compose
+1. Clone the repository to your local machine
+2. Move into the solution directory
+3. Build and run the project using docker compose
+```
+    docker compose build
+    docker compose up
+    
+    OR
+    
+    docker-compose build
+    docker-compose up
+```
+4. Using default files, docker should expose client app on http://localhost:3000 and api on http://localhost:8080 
+5. To access swagger endpoint go to http://localhost:8080/api/swagger
+
+### Local environment
+#### Prerequisites
+ - Node installed(v18.15.0)
+ - npm installed(v9.5.0)
+ - .NET SDK (v6.0 or higher)
+
+#### Setup and run using local environment using IDE
+ - Open solution file in VS/Rider
+ - Run application using UrlShortener.WebApplication profile
+#### Setup and run using local environment from console
+ - Go to ./src/UrlShortener.WebApplication
+ - Restore, build and run the project using launch profile
+```
+    dotnet restore
+    dotnet build
+    dotnet run --launch-profile UrlShortener.WebApplication
+```
+ - Once the project has started go to http://localhost:5000
+ - After the proxy starts you'll be redirected to the Client Application
+
+## Key assumptions
+1. URL shouldn't be preserved forever - if they're not accessed for some amount of time then they should be removed
+2. Using InMemoryStorage should be only done in local dev environment
 
 ## Future Ideas
-`Section description:  If you haven't enough time to implement some feature or ideas, please provide them here.`
+1. There might be an issue with "phantom reads" if more than one client is currently using API - that's due to the use of Redis and SortedSets - I wanted to sort the results by how ofter they're accessed, so at each time the URL is accessed, score in sorted set is increased for that url - I thought about adding second database to just serve user the list
+2. API versioning
+3. Enable HTTPS communication between ClientApp and API
 
 
 ## Task Description 

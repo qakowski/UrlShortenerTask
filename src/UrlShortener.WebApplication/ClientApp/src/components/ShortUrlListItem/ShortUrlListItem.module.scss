@@ -1,0 +1,35 @@
+@mixin cell-hover {
+    position: relative;
+    &:hover:after {
+        content: attr(title);
+        position: fixed;
+        top: calc(100% + 5px);
+        left: 0;
+        width: 100%;
+        transform: translateX(-50%);
+        z-index: 1;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 8px;
+        font-size: 14px;
+    }
+}
+
+%base-cell {
+        max-width: 400px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+}
+
+.originalUrl  {
+    @extend %base-cell;
+    width: 500px;
+    @include cell-hover;
+}
+
+.shortUrl {
+    @extend %base-cell;
+    width: 250px;
+    @include cell-hover;
+}
