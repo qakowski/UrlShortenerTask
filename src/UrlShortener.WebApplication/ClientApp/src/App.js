@@ -16,7 +16,7 @@ function App() {
     <div className="container">
       <div className="App">
         <ShortUrlForm onShortUrlCreated={handleShortUrlCreated} />
-        <ShortUrlsList page={page} setPage={setPage} refresh={refresh} />
+          <ShortUrlsList page={page} setPage={setPage} refresh={refresh} setRefresh={setRefresh}/>
       </div>
     </div>
   );
