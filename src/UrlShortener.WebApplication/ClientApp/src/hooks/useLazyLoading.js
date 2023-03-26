@@ -1,10 +1,20 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
-const useLazyLoading = (fetchData, page, dependencies = []) => {
-  const [data, setData] = useState([]);
+const useLazyLoading = (fetchData, page, setData, data, dependencies = []) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const handleScroll = () => {
+      if (loading || !data.length) {
+        return;
+      }
+
+      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+      if (scrollTop + clientHeight >= scrollHeight - 5) {
+        setLoading(true);
+      }
+    };
+
     setLoading(true);
     let isMounted = true;
     fetchData(page)
@@ -19,28 +29,14 @@ const useLazyLoading = (fetchData, page, dependencies = []) => {
         setLoading(false);
       });
 
+    window.addEventListener('scroll', handleScroll);
     return () => {
       isMounted = false;
+      window.removeEventListener('scroll', handleScroll);
     };
   }, dependencies);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (loading || !data.length) {
-        return;
-      }
-
-      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-      if (scrollTop + clientHeight >= scrollHeight - 5) {
-        setLoading(true);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [data, loading]);
-
-  return { data, loading };
+  return { loading };
 };
 
 export default useLazyLoading;

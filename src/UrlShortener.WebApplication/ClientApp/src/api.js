@@ -1,6 +1,6 @@
 const apiUrl = process.env.REACT_APP_URL_SHORTENER_ADDRESS;
 
-async function fetchData(page, limit = 50) {
+async function fetchData(page, limit) {
   try {
     const response = await fetch(apiUrl + `all?page=${page}&limit=${limit}`, {
       method: 'GET',

@@ -4,13 +4,13 @@ import useLazyLoading from '../../hooks/useLazyLoading';
 import { fetchData } from '../../api.js';
 import styles from './ShortUrlsList.module.scss';
 
-const ShortUrlsList = ({ page, setPage, refresh }) => {
+const ShortUrlsList = ({ page, setPage, refresh, setRefresh }) => {
   const [data, setData] = useState([]);
-  const { loading } = useLazyLoading(() => fetchData(page, 50), [page, refresh]);
+  useLazyLoading(() => fetchData(page, 50), page, setData, data, refresh, [page]);
 
-  useEffect(() => {
+ useEffect(() => {
     const fetchDataAndUpdate = async () => {
-      const newData = await fetchData(page, 50);
+      const newData = await fetchData(0, 0);
       setData(newData);
     };
 
@@ -19,7 +19,7 @@ const ShortUrlsList = ({ page, setPage, refresh }) => {
 
   const handleRefresh = async () => {
     setPage(0);
-    await fetchData(page, 50);
+    setRefresh((prevRefresh) => !prevRefresh);
   };
 
   return (
@@ -38,8 +38,7 @@ const ShortUrlsList = ({ page, setPage, refresh }) => {
           ))}
         </tbody>
       </table>
-      {loading && <p>Loading...</p>}
-      {!loading && <button className="load-more-button" onClick={handleRefresh}>Refresh</button>}
+      <button className="refresh-button" onClick={handleRefresh}>Refresh</button>
     </div>
   );
 };
